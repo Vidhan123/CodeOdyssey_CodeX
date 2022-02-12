@@ -94,7 +94,7 @@ contract Market is MarketInterface, Ownable {
 
   // Withdraw DAI (deposited+interest)
   function withdraw(uint256 _withdrawalAmount) override external updateInterestRates(_withdrawalAmount, true) {
-    require(_withdrawalAmount <= (mDai.balanceOfToken(msg.sender)/getExchangeRateDai()), "Withdrawal limit exceeded");
+    require(_withdrawalAmount <= ((mDai.balanceOfToken(msg.sender)*getExchangeRateDai())/1e18), "Withdrawal limit exceeded");
     
     dai.transfer(msg.sender, _withdrawalAmount);
     uint256 amountBurned = (_withdrawalAmount*1e18)/getExchangeRateDai();
