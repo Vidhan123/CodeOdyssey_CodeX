@@ -84,7 +84,7 @@ contract Market is MarketInterface, Ownable {
     uint256 amountMinted = (_depositAmount*1e18)/getExchangeRateDai();
     mDai.mint(msg.sender, amountMinted);
     // Incentive in the form of MULTI Token (100%)
-    MLT.mint(msg.sender, _depositAmount/100);
+    MLT.mint(msg.sender, _depositAmount);
 
     marketSizeDai += _depositAmount;
     vaults[msg.sender].depositAmount += _depositAmount;
@@ -155,9 +155,9 @@ contract Market is MarketInterface, Ownable {
     }
     else {
       return uint256(
-        (_repaymentAmount * 100 * vaults[account].collateralAmount) 
+        (_repaymentAmount * 1e18 * vaults[account].collateralAmount) 
         / 
-        (vaults[account].repayAmount * maticCollateralFactor)
+        (vaults[account].repayAmount * getExchangeRateDai())
       );
     }
   }
