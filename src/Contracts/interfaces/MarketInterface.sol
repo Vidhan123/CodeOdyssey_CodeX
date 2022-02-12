@@ -8,6 +8,7 @@ interface MarketInterface {
     uint256 withdrawnAmount; // Amount of DAI withdrawn
     uint256 collateralAmount; // Amount of collateral held by the vault contract
     uint256 debtAmount; // Amount of DAI borrowed
+    uint256 repaidAmount; // Amount of DAI repaid
     uint256 repayAmount; // Amount of mDAI equivalence 
   }
 

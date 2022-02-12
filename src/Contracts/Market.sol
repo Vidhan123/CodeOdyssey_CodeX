@@ -134,6 +134,7 @@ contract Market is MarketInterface, Ownable {
     mMatic.burn(msg.sender, _repaymentAmount);
     
     vaults[msg.sender].collateralAmount -= amountToWithdraw;
+    vaults[msg.sender].repaidAmount += _repaymentAmount;
     vaults[msg.sender].repayAmount -= ((_repaymentAmount * 1e18) / getExchangeRateDai());
     totalBorrowedDai -= _repaymentAmount;
 
