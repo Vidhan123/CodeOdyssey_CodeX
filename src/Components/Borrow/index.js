@@ -231,7 +231,7 @@ function Borrow(props) {
             <Grid item xs={12} sm={3}>
                 <Paper className="card" elevation={2}>
                   <div className="overview-data">
-                    <p>{liabilities && convertFromWei(liabilities,5)} DAI</p>
+                    <p>{liabilities && convertFromWei(liabilities,5).toFixed(5)} DAI</p>
                     <p>${liabilities && daiP && (convertFromWei(liabilities,5)*convertFromWei(daiP)).toFixed(5)}</p>
                     <p>Liabilities</p>
                   </div>
@@ -242,7 +242,7 @@ function Borrow(props) {
                 <Paper className="card" elevation={2}>
                   <div className="overview-data">
                     <p>{collateralDeposited && convertFromWei(collateralDeposited,5).toFixed(5)} MATIC</p>
-                    <p>${collateralDeposited && maticP && (convertFromWei(collateralDeposited)*convertFromWei(maticP)).toFixed(2)}</p>
+                    <p>${collateralDeposited && maticP && (convertFromWei(collateralDeposited)*convertFromWei(maticP)).toFixed(5)}</p>
                     <p>Collateral Deposited</p>
                   </div>
                   <svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" className='img-overview'><circle opacity=".1" cx="24" cy="24" r="24" fill="#2EBDC2"></circle><g clip-path="url(#incoming_svg__clip0)" fill="#2EBDC2"><path d="M14.4 21.334c-.589 0-1.066.477-1.066 1.066v10.667c0 .589.477 1.066 1.066 1.066h19.2c.589 0 1.067-.477 1.067-1.066V22.4c0-.589-.478-1.066-1.067-1.066H14.4zm2.04 2.133h15.12a1.6 1.6 0 00.973.973v6.587a1.6 1.6 0 00-.972.973H16.44a1.598 1.598 0 00-.973-.973V24.44a1.598 1.598 0 00.973-.973zM24 24.534a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4zm-5.333 2.133a1.066 1.066 0 100 2.132 1.066 1.066 0 000-2.132zm10.666 0a1.066 1.066 0 100 2.133 1.066 1.066 0 000-2.133z"></path><path d="M20.688 16.075l2.812 2.813a.69.69 0 00.5.212.69.69 0 00.5-.213l2.812-2.812a.694.694 0 00-.002-1.002.721.721 0 00-.497-.21.721.721 0 00-.5.212l-1.6 1.6V12.95a.702.702 0 00-.713-.712.702.702 0 00-.712.712v3.726l-1.6-1.6a.721.721 0 00-.5-.213.721.721 0 00-.5.212.694.694 0 000 1z" stroke="#2EBDC2" stroke-width=".3"></path></g><defs><clipPath id="incoming_svg__clip0"><path fill="#fff" transform="translate(12 12)" d="M0 0h24v24H0z"></path></clipPath></defs></svg>
@@ -262,7 +262,7 @@ function Borrow(props) {
                 <Paper className="card" elevation={2}>
                   <div className="overview-data">
                     <p>{borrowed && convertFromWei(borrowed,5).toFixed(5)} DAI</p>
-                    <p>${borrowed && daiP && (convertFromWei(borrowed)*convertFromWei(daiP)).toFixed(2)}</p>
+                    <p>${borrowed && daiP && (convertFromWei(borrowed)*convertFromWei(daiP)).toFixed(5)}</p>
                     <p>Total Borrowed</p>
                   </div>
                   <svg width="48" height="48" fill="none" xmlns="http://www.w3.org/2000/svg" className='img-overview'><circle opacity=".1" cx="24" cy="24" r="24" fill="#5242A2"></circle><g clip-path="url(#outgoing_svg__clip0)" fill="#5242A2"><path d="M27.206 15.169l-2.812-2.813a.54.54 0 00-.394-.168.54.54 0 00-.394.168l-2.812 2.813a.544.544 0 000 .787.572.572 0 00.393.169.572.572 0 00.394-.169l1.857-1.856v4.088c0 .318.243.562.562.562a.553.553 0 00.563-.563V14.1l1.856 1.856a.572.572 0 00.393.169.572.572 0 00.394-.169.544.544 0 000-.787zM14.4 21.334c-.589 0-1.066.477-1.066 1.066v10.667c0 .589.477 1.066 1.066 1.066h19.2c.589 0 1.067-.477 1.067-1.066V22.4c0-.589-.478-1.066-1.067-1.066H14.4zm2.04 2.133h15.12a1.6 1.6 0 00.973.973v6.587a1.6 1.6 0 00-.972.973H16.44a1.598 1.598 0 00-.973-.973V24.44a1.598 1.598 0 00.973-.973zM24 24.534a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4zm-5.333 2.133a1.066 1.066 0 100 2.132 1.066 1.066 0 000-2.132zm10.666 0a1.066 1.066 0 100 2.133 1.066 1.066 0 000-2.133z"></path></g><defs><clipPath id="outgoing_svg__clip0"><path fill="#fff" transform="translate(12 12)" d="M0 0h24v24H0z"></path></clipPath></defs></svg>
@@ -275,7 +275,7 @@ function Borrow(props) {
                 <Paper className="card" elevation={2}>
                   <img src={maticIcon} alt="matic-icon" className='img-balance' />
                   <div className="coin-data">
-                    <p>{maticB && convertFromWei(maticB,2)} MATIC</p>
+                    <p>{maticB && convertFromWei(maticB,2).toFixed(2)} MATIC</p>
                     <p>${maticB && maticP && (convertFromWei(maticB)*convertFromWei(maticP)).toFixed(2)}</p>
                   </div>
                 </Paper>
@@ -284,7 +284,7 @@ function Borrow(props) {
                 <Paper className="card" elevation={2}>
                   <img src={daiIcon} alt="dai-icon" className='img-balance' style={{ maxWidth: '65px' }} />
                   <div className="coin-data">
-                    <p>{daiB && convertFromWei(daiB,2)} DAI</p>
+                    <p>{daiB && convertFromWei(daiB,2).toFixed(2)} DAI</p>
                     <p>${daiB && daiP && (convertFromWei(daiB)*convertFromWei(daiP)).toFixed(2)}</p>
                   </div>
                 </Paper>
@@ -293,7 +293,7 @@ function Borrow(props) {
                 <Paper className="card" elevation={2}>
                   <img src={mIcon} alt="m-icon" className='img-balance' />
                   <div className="coin-data">
-                    <p>{mltB && convertFromWei(mltB,2)} MLT</p>
+                    <p>{mltB && convertFromWei(mltB,2).toFixed(2)} MLT</p>
                     <p>-</p>
                   </div>
                 </Paper>
