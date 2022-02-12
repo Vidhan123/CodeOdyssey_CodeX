@@ -72,7 +72,7 @@ contract Market is MarketInterface, Ownable {
     // Increasing exchange rate of mDai (12% for a year)
     // return exchangeRateDai + 
     // uint256((12 * (block.timestamp - deploymentTime)) / (3.154 * 1e7));
-    return uint256(exchangeRateDai + 1e12*(block.timestamp - deploymentTime)); // For demonstartion
+    return uint256(exchangeRateDai + 1e9*(block.timestamp - deploymentTime)); // For demonstartion
   }
 
   // Deposit DAI to earn interest (Lending)
