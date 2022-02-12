@@ -33,7 +33,7 @@ interface MarketInterface {
     
   function estimateCollateralAmount(uint256 _repaymentAmount) external view returns (uint256 collateralAmount);
     
-  function estimateTokenAmount(uint256 _depositAmount) external view returns (uint256 tokenAmount);
+  function estimateTokenAmount(uint256 _depositAmount, address account) external view returns (uint256 tokenAmount);
 
   function estimateCollateralAmountTobePaid(uint256 _requestAmount) external view returns (uint256 collateralAmount);
 
