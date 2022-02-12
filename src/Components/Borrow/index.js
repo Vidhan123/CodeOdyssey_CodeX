@@ -35,6 +35,7 @@ function Borrow(props) {
   const [liabilities, setLiabilities] = useState(null);
   const [borrowed, setBorrowed] = useState(null);
   const [collateralDeposited, setCollateralDeposited] = useState(null);
+  const [repaidAmount, setRepaidAmount] = useState(null);
   
   const [daiB, setDaiB] = useState(null);
   const [maticB, setMaticB] = useState(null);
@@ -42,8 +43,6 @@ function Borrow(props) {
   
   const [daiP, setDaiP] = useState(null);
   const [maticP, setMaticP] = useState(null);
-
-  const [cR, setCR] = useState(null);
 
   const [daiAmountB, setDaiAmountB] = useState(0);
   const [maticAmountB, setMaticAmountB] = useState('0');
@@ -160,7 +159,6 @@ function Borrow(props) {
     }
 
     if(market) {
-      setCR(await market.methods.maticCollateralFactor().call());
       setDaiP(await market.methods.getDAIUSDPrice().call());
       setMaticP(await market.methods.getMATICUSDPrice().call());
     }
@@ -179,6 +177,7 @@ function Borrow(props) {
       }
       setCollateralDeposited(vault.collateralAmount);
       setBorrowed(vault.debtAmount);
+      setRepaidAmount(vault.repaidAmount);
     }
 
     setLoading(false);
@@ -212,7 +211,7 @@ function Borrow(props) {
   useEffect(() => {
     const calcu = async () => {
       if(account && daiAmountR && daiAmountR >= 0) {
-        // setMaticAmountR(await market.methods.estimateCollateralAmount(convertToWei(daiAmountR), account).call());
+        setMaticAmountR(await market.methods.estimateCollateralAmount(convertToWei(daiAmountR), account).call());
       }
       else {
         setMaticAmountR('0');
@@ -252,8 +251,8 @@ function Borrow(props) {
               <Grid item xs={12} sm={3}>
                 <Paper className="card" elevation={2}>
                   <div className="overview-data">
-                    {/* <p>{withdrawn && deposited && convertFromWei((parseInt(deposited)+1e12-parseInt(deposited)),5)} DAI</p> */}
-                    {/* <p>${withdrawn && deposited && daiP && (convertFromWei((parseInt(deposited)+1e12-parseInt(deposited)),5)*convertFromWei(daiP)).toFixed(5)}</p> */}
+                    <p>{liabilities && repaidAmount && borrowed && convertFromWei((parseInt(liabilities)+parseInt(repaidAmount)-parseInt(borrowed)).toString(),5).toFixed(5)} DAI</p>
+                    <p>${liabilities && repaidAmount && borrowed && daiP && (convertFromWei((parseInt(liabilities)+parseInt(repaidAmount)-parseInt(borrowed)).toString(),5)*convertFromWei(daiP)).toFixed(5)}</p>
                     <p>Borrowing Interest</p>
                   </div>
                   <svg width="48" height="48" fill="none" className='img-overview'  xmlns="http://www.w3.org/2000/svg"><circle opacity=".1" cx="24" cy="24" r="24" fill="#CA8700"></circle><g clip-path="url(#balance_svg__clip0)" fill="#CA8700"><path d="M14.4 21.334c-.589 0-1.066.477-1.066 1.066v10.667c0 .589.477 1.066 1.066 1.066h19.2c.589 0 1.067-.477 1.067-1.066V22.4c0-.589-.478-1.066-1.067-1.066H14.4zm2.04 2.133h15.12a1.6 1.6 0 00.973.973v6.587a1.6 1.6 0 00-.972.973H16.44a1.598 1.598 0 00-.973-.973V24.44a1.598 1.598 0 00.973-.973zM24 24.534a3.2 3.2 0 100 6.4 3.2 3.2 0 000-6.4zm-5.333 2.133a1.066 1.066 0 100 2.132 1.066 1.066 0 000-2.132zm10.666 0a1.066 1.066 0 100 2.133 1.066 1.066 0 000-2.133z"></path><rect x="21" y="16" width="7" height="1.5" rx=".75"></rect><rect x="21" y="13" width="7" height="1.5" rx=".75"></rect></g><defs><clipPath id="balance_svg__clip0"><path fill="#fff" transform="translate(12 12)" d="M0 0h24v24H0z"></path></clipPath></defs></svg>
