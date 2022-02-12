@@ -83,8 +83,8 @@ contract Market is MarketInterface, Ownable {
     // mToken for DAI whose exchange rate against DAI will increase gradually
     uint256 amountMinted = (_depositAmount*1e18)/getExchangeRateDai();
     mDai.mint(msg.sender, amountMinted);
-    // Incentive in the form of MULTI Token (20%)
-    MLT.mint(msg.sender, _depositAmount/20);
+    // Incentive in the form of MULTI Token (100%)
+    MLT.mint(msg.sender, _depositAmount/100);
 
     marketSizeDai += _depositAmount;
     vaults[msg.sender].depositAmount += _depositAmount;
@@ -113,8 +113,8 @@ contract Market is MarketInterface, Ownable {
     
     dai.transfer(msg.sender, _borrowAmount);
     mMatic.mint(msg.sender, _collateralAmount);
-    // Incentive in the form of MULTI Token (20%)
-    MLT.mint(msg.sender, _borrowAmount/20);
+    // Incentive in the form of MULTI Token (100%)
+    MLT.mint(msg.sender, _borrowAmount);
 
     vaults[msg.sender].collateralAmount += _collateralAmount;
     vaults[msg.sender].debtAmount += _borrowAmount;
