@@ -5,6 +5,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Chip, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table, List, ListItem, ListItemText, Typography, Tooltip, ListItemSecondaryAction, IconButton, Tabs, Tab, Grid, Card, CardContent, Button, Icon, TextField, InputAdornment } from '@material-ui/core';
 import { AccountBalanceWalletOutlined, GetAppOutlined, LockOutlined, MonetizationOnOutlined, ScheduleOutlined } from '@material-ui/icons';
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import MDai from '../../Abis/MDai.json';
 import MLTToken from '../../Abis/MLTToken.json';
 
@@ -15,7 +18,7 @@ import Loading from '../Loading';
 import mDaiIcon from "../../Assets/mDai.svg";
 import mIcon from "../../Assets/m.svg";
 
-import { downloadCSV, convertFromWei } from '../helper';
+import { downloadCSV, convertFromWei, convertToWei } from '../helper';
 
 const useStyles = makeStyles((theme) => ({
   table: {
@@ -47,13 +50,120 @@ function Stake(props) {
   
   const [value, setValue] = useState(0);
 
+  const [stakeAmount, setStakeAmount] = useState(0);
+
+  const notify = (success, msg) => {
+    setLoading(false);
+    if(success) {
+      toast.success(`${msg}`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        fetchTransactions();
+      }, [25000])
+    }
+    else {
+      toast.error(` ${msg}!`, {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  }
+
   const handleChange = (event, newValue) => {
     setValue(newValue);
     setToken(tokens[newValue]);
   };
 
+  const handleStake = async () => {
+    if(!stakeAmount || stakeAmount <= 0) {
+      // > 0
+      notify(false, ` Amount must be greater than 0!`);
+    }
+    else if(parseInt(convertToWei(stakeAmount)) > parseInt(balance)) {
+      // Exceeds Balance
+      notify(false, ` Amount exceeds wallet balance!`);
+    }
+    else {
+      // Success
+      setLoading(true); 
+      const searchA = token === 'mDai' ? mDaiA : mltA;
+      const searchAbi = token === 'mDai' ? mDai : multi;
+      
+      await searchAbi.methods
+        .approve(searchA, convertToWei(stakeAmount))
+        .send({ from: account })
+        .on('transactionHash', async (hash) => {
+          await searchAbi.methods
+            .stake(convertToWei(stakeAmount))
+            .send({ from: account })
+            .on('transactionHash', (hash) => {
+              notify(true, `Successfully Staked!`);
+            })
+            .on('error', (e) =>{
+              notify(false, e.message);
+            })
+        })
+        .on('error', (e) =>{
+          notify(false, e.message);
+        })
+    }
+  }
+
+  const handleUnstake = async () => {
+    if(!stakeAmount || stakeAmount <= 0) {
+      // > 0
+      notify(false, ` Amount must be greater than 0!`);
+    }
+    else if(parseInt(convertToWei(stakeAmount)) > parseInt(balanceS)) {
+      // Exceeds Balance
+      notify(false, ` Amount exceeds staked balance!`);
+    }
+    else {
+      // Success
+      setLoading(true); 
+      const searchAbi = token === 'mDai' ? mDai : multi;
+      
+      await searchAbi.methods
+        .withdraw(convertToWei(stakeAmount))
+        .send({ from: account })
+        .on('transactionHash', (hash) => {
+          notify(true, `Successfully Unstaked!`);
+        })
+        .on('error', (e) =>{
+          notify(false, e.message);
+        })
+    }
+  }
+
+  const handleGetRewards = async () => {
+    // Success
+    setLoading(true); 
+    const searchAbi = token === 'mDai' ? mDai : multi;
+    
+    await searchAbi.methods
+      .getReward()
+      .send({ from: account })
+      .on('transactionHash', (hash) => {
+        notify(true, `Successfully Claimed!`);
+      })
+      .on('error', (e) =>{
+        notify(false, e.message);
+      })
+  }
+  
   const fetchTransactions = async () => {
-    setLoading(true);
     const searchA = token === 'mDai' ? mDaiA : mltA;
     const searchAbi = token === 'mDai' ? MDai : MLTToken;
     const searchS = token === 'mDai' ? mDai : multi;
@@ -79,7 +189,7 @@ function Stake(props) {
     }
     if(account && account !== '' && searchS) {
       setBalance(await searchS.methods.balanceOf(account).call());
-      // setBalanceS(await searchS.methods._balances(account).call());
+      setBalanceS(await searchS.methods._balances(account).call());
       setBalanceR(await searchS.methods.earned(account).call());
     }
 
@@ -137,7 +247,7 @@ function Stake(props) {
                       <LockOutlined fontSize='large' />
                     </Icon>
                     <div className="coin-data">
-                      <p>{balance && convertFromWei(balance,2)} {token.toUpperCase()}</p>
+                      <p>{balanceS && convertFromWei(balanceS,2)} {token.toUpperCase()}</p>
                       <p>Staked Balance</p>
                     </div>
                   </Paper>
@@ -179,10 +289,12 @@ function Stake(props) {
                             </InputAdornment>
                           ),
                         }}
+                        value={stakeAmount}
+                        onChange={(e) => setStakeAmount(e.target.value)}
                       />
                       <div style={{ margin: '25px auto 15px auto' }}>
                         <Button
-                          // onClick={() => connectToMetaMask()}
+                          onClick={() => handleStake()}
                           variant="contained"
                           color="primary"
                           style={{ width: '48%', marginRight: '4%', textTransform: 'none' }}
@@ -190,7 +302,7 @@ function Stake(props) {
                           Stake
                         </Button>
                         <Button
-                          // onClick={() => connectToMetaMask()}
+                          onClick={() => handleUnstake()}
                           variant="contained"
                           color="primary"
                           style={{ width: '48%', textTransform: 'none' }}
@@ -199,7 +311,7 @@ function Stake(props) {
                         </Button>
                       </div>
                       <Button
-                        // onClick={() => connectToMetaMask()}
+                        onClick={() => handleGetRewards()}
                         variant="outlined"
                         color="primary"
                         fullWidth
@@ -260,6 +372,18 @@ function Stake(props) {
               </TableBody>
             </Table>
           </TableContainer>
+
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
         </>
       }
     </>
