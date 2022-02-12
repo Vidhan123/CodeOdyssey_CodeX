@@ -130,7 +130,7 @@ contract Market is MarketInterface, Ownable {
     require(dai.balanceOf(msg.sender) >= _repaymentAmount, "Not enough token balance");
 
     dai.transferFrom(msg.sender, address(this), _repaymentAmount);
-    uint256 amountToWithdraw = estimateCollateralAmount(_repaymentAmount);
+    uint256 amountToWithdraw = estimateCollateralAmount(_repaymentAmount, msg.sender);
     mMatic.burn(msg.sender, _repaymentAmount);
     
     vaults[msg.sender].collateralAmount -= amountToWithdraw;
@@ -149,15 +149,15 @@ contract Market is MarketInterface, Ownable {
   }
     
   // How much MATIC will be reedemed for the given repay of DAI (with interest)
-  function estimateCollateralAmount(uint256 _repaymentAmount) public view returns (uint256 collateralAmount) {
-    if(vaults[msg.sender].repayAmount <= 0) {
-      return vaults[msg.sender].repayAmount;    
+  function estimateCollateralAmount(uint256 _repaymentAmount, address account) public view returns (uint256 collateralAmount) {
+    if(vaults[account].repayAmount <= 0) {
+      return vaults[account].repayAmount;    
     }
     else {
       return uint256(
-        (_repaymentAmount * 100 * vaults[msg.sender].collateralAmount) 
+        (_repaymentAmount * 100 * vaults[account].collateralAmount) 
         / 
-        (vaults[msg.sender].repayAmount * maticCollateralFactor)
+        (vaults[account].repayAmount * maticCollateralFactor)
       );
     }
   }
