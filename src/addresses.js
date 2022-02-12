@@ -8,7 +8,7 @@ const mMaticA = "0x10fb720ffAb1fa3a65d2a06c49bE966115256482";
 
 const mltA = "0xffda80192a401ae9539B7141E508AbFE13830818";
 
-const marketA = "0xef42b71187a5D7F359A0D227Efe3dc1FB35FA6F1";
+const marketA = "0x9520cB9674a526b4182ef8E4Fde049566Bd305Cf";
 
 export { daiA, oracleA, mDaiA, mMaticA, mltA, marketA };
 
