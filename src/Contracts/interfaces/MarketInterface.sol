@@ -31,9 +31,9 @@ interface MarketInterface {
 
   function getVault(address _userAddress) external view returns (Vault memory vault);
     
-  function estimateCollateralAmount(uint256 _repaymentAmount) external view returns (uint256 collateralAmount);
+  function estimateCollateralAmount(uint256 _repaymentAmount, address account) external view returns (uint256 collateralAmount);
     
-  function estimateTokenAmount(uint256 _depositAmount, address account) external view returns (uint256 tokenAmount);
+  function estimateTokenAmount(uint256 _depositAmount) external view returns (uint256 tokenAmount);
 
   function estimateCollateralAmountTobePaid(uint256 _requestAmount) external view returns (uint256 collateralAmount);
 
