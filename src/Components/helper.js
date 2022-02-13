@@ -12,6 +12,7 @@ const convertToCSV = (objArray) => {
   let array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
   let str = '';
 
+  // Arr => comma separated string
   for (let i = 0; i < array.length; i++) {
     let line = '';
     for (let index in array[i]) {
@@ -25,6 +26,7 @@ const convertToCSV = (objArray) => {
 
 const exportCSVFile = (headers, items, fileTitle) => {
   if (headers) {
+    // Inserts at beginnning
     items.unshift(headers);
   }
   // Convert Object to JSON
@@ -36,8 +38,10 @@ const exportCSVFile = (headers, items, fileTitle) => {
 
   let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   if (navigator.msSaveBlob) { // IE 10+
-      navigator.msSaveBlob(blob, exportedFilenmae);
-  } else {
+    // Saves file/blob to disk
+    navigator.msSaveBlob(blob, exportedFilenmae);
+  } 
+  else {
     let link = document.createElement("a");
     if (link.download !== undefined) { // feature detection
       // Browsers that support HTML5 download attribute
